@@ -1,1 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select City</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='select_city.css') }}">
+  <!-- Load jQuery + Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+</head>
+<body>
+  <div class="select-box">
+    <h2>Select Your State & City</h2>
+    <form method="POST" action="{{ url_for('select_city') }}">
+      <!-- State Dropdown -->
+      <label for="state">State</label>
+      <select name="state" id="state" class="dropdown" required>
+        <option value="">-- Select State --</option>
+        <option value="Maharashtra">Maharashtra</option>
+        <option value="Karnataka">Karnataka</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Delhi">Delhi</option>
+        <option value="West Bengal">West Bengal</option>
+        <option value="Rajasthan">Rajasthan</option>
+        <option value="Gujrat">Gujrat</option>
+        <option value="Telangana">Telangana</option>
+      </select>
 
+      <!-- City Dropdown -->
+      <label for="city">City</label>
+      <select name="city" id="city" class="dropdown" required>
+        <option value="">-- Select City --</option>
+      </select>
+
+      <button type="submit">Continue ➡️</button>
+    </form>
+  </div>
+
+  <script>
+    // Map of states to cities
+    const stateCityMap = {
+      "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik"],
+      "Karnataka": ["Bengaluru", "Mysuru", "Mangalore"],
+      "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
+      "Delhi": ["New Delhi", "Dwarka", "Rohini"],
+      "West Bengal": ["Kolkata", "Howrah", "Durgapur"],
+      "Rajasthan": ["Jaipur", "Udaipur", "Jodhpur", "Ajmer"],
+      "Gujrat": ["Ahmedabad", "Vadodara", "Rajkot", "Surat"],
+      "Telangana": ["Nizamabad", "Karimnagar", "Khammam", "Hyderabad"]
+    };
+
+    $(document).ready(function() {
+      $('#state').select2({ placeholder: "Select a State" });
+      $('#city').select2({ placeholder: "Select a City" });
+
+      $('#state').on('change', function() {
+        let selectedState = $(this).val();
+        let cityDropdown = $('#city');
+        cityDropdown.empty().append('<option value="">-- Select City --</option>');
+
+        if (stateCityMap[selectedState]) {
+          stateCityMap[selectedState].forEach(city => {
+            cityDropdown.append(new Option(city, city));
+          });
+        }
+        cityDropdown.trigger('change');
+      });
+    });
+  </script>
+</body>
+</html>
