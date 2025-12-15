@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chatbot.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">💬 Smart Chatbot</div>
 
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will appear here -->
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const inputField = document.getElementById("user-input");
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            // Show user message
+            const messagesDiv = document.getElementById("chat-messages");
+            const userMsg = document.createElement("div");
+            userMsg.className = "message user-message";
+            userMsg.innerText = message;
+            messagesDiv.appendChild(userMsg);
+
+            inputField.value = "";
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Send to backend
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+
+                // Show bot reply
+                const botMsg = document.createElement("div");
+                botMsg.className = "message bot-message";
+                botMsg.innerText = data.reply;
+                messagesDiv.appendChild(botMsg);
+
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } catch (err) {
+                const errorMsg = document.createElement("div");
+                errorMsg.className = "message bot-message";
+                errorMsg.innerText = "⚠️ Error: Could not reach server.";
+                messagesDiv.appendChild(errorMsg);
+            }
+        }
+
+        // Send message on Enter key
+        document.getElementById("user-input").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
