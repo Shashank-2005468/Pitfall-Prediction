@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Registration</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+</head>
+<body>
+  <div class="register-box">
+    <h2>User Registration</h2>
+    <form method="POST">
+      <!-- Username -->
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+
+      <!-- Password -->
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <!-- Phone -->
+      <label for="phone">Mobile Number</label>
+      <input type="text" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+
+      <!-- Submit -->
+      <button type="submit">Register ✅</button>
+    </form>
+
+    <p style="margin-top:15px; font-size:14px;">
+      Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - Pitfall Prediction</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="acc-details">
+            <h3>Account Info</h3>
+            <p><strong>Username:</strong> {{ user.get('username', session['username']) }}</p>
+            <p><strong>Phone:</strong> {{ user.get('phone', 'N/A') }}</p>
+            <p><strong>State:</strong> {{ state if state else 'N/A' }}</p>
+            <p><strong>City:</strong> {{ city if city else 'N/A' }}</p>
+        </div>
+
+        <div class="sidebar-bottom">
+            <a href="{{ url_for('change_password') }}" class="btn">Change Password</a>
+            <a href="{{ url_for('chatbot_page') }}" class="btn">Chatbot</a>
+            <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <h2>Pitfall Prediction Form</h2>
+        <form method="POST">
+            <label>Terrain Type (0-10)</label>
+            <input type="number" name="TerrainType" min="0" max="10" step="0.1" required>
+
+            <label>Weather Severity (0-10)</label>
+            <input type="number" name="Weather" min="0" max="10" step="0.1" required>
+
+            <label>Rock Density (0-100)</label>
+            <input type="number" name="RockDensity" min="0" max="100" step="0.1" required>
+
+            <label>Surface Roughness (0-10)</label>
+            <input type="number" name="SurfaceRoughness" min="0" max="10" step="0.1" required>
+
+            <label>Moisture % (0-100)</label>
+            <input type="number" name="MoisturePct" min="0" max="100" step="0.1" required>
+
+            <label>Slope (°) (0-90)</label>
+            <input type="number" name="SlopeDeg" min="0" max="90" step="0.1" required>
+
+            <label>Traffic Load (0-10)</label>
+            <input type="number" name="TrafficLoad" min="0" max="10" step="0.1" required>
+
+            <label>Drainage Quality (0-10)</label>
+            <input type="number" name="DrainageQuality" min="0" max="10" step="0.1" required>
+
+            <label>Depth (cm) (0-500)</label>
+            <input type="number" name="DepthCm" min="0" max="500" step="0.1" required>
+
+            <label>Soil Hardness (0-10)</label>
+            <input type="number" name="SoilHardness" min="0" max="10" step="0.1" required>
+
+            <label>Vibration Level (0-10)</label>
+            <input type="number" name="VibrationLevel" min="0" max="10" step="0.1" required>
+
+            <button type="submit">Predict Pitfall</button>
+        </form>
+
+        {% if prediction is not none %}
+        <div class="result {% if risk_label=='Low Risk' %}low{% elif risk_label=='Medium Risk' %}medium{% else %}high{% endif %}">
+            <p>Prediction: {{ 'Pitfall' if prediction==1 else 'No Pitfall' }} {{ risk_icon }}</p>
+            <p>Probability: {{ probability }}%</p>
+            <p>Risk Level: {{ risk_label }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
